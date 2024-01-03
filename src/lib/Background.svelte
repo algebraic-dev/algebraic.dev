@@ -56,7 +56,7 @@
         let x = Math.random() * innerWidth;
         let y = Math.random() * innerHeight;
 
-        let scale = Math.random() * 0.5 + 0.5;
+        let scale = Math.random() * 0.7 + 0.3;
         let radius = Math.random() * 10 + 20;
         let speed = Math.random() * 0.1 + 0.05;
 
@@ -152,33 +152,37 @@
 
 	const drawEye = (point: Point, scale: number, radius: number, cycle: number) => {
 		if (context) {
-			context.strokeStyle = `rgba(255, 255, 255, 1.0)`;
-			context.lineWidth = 1;
+			context.strokeStyle = `rgba(0, 0, 0, 1.0)`;
+			context.lineWidth = 3;
 
             // convert radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(227,227,227,1) 0%, rgba(255,255,255,1) 100%)
 
-            let gradient = context.createRadialGradient(point.x + 50*scale, point.y, 0, point.x + 50*scale, point.y, radius*scale);
-            gradient.addColorStop(0, 'rgba(2,0,36,1)');
-            gradient.addColorStop(0, 'rgba(227,227,227,1)');
-            gradient.addColorStop(1, 'rgba(255,255,255,1)');
+            let gradient = context.createRadialGradient(point.x + 50*scale, point.y, 0, point.x + 50*scale, point.y, radius*2*scale);
+            gradient.addColorStop(0.9, 'gray');
+            gradient.addColorStop(0.2, 'white');
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
 
+
+            context.save();
+            context.rotate(Math.PI/180 * (scale*50 - 25));
+            context.translate(cameraX/10, cameraY/10);
 
 			context.beginPath();
 			drawLadder(point, scale, cycle);
 			context.fillStyle = gradient;
 			context.fill();
+            context.stroke();
 			context.closePath();
 
-			context.save();
 
 			context.clip();
 
-			context.beginPath();
-
+            
             let posX = mouseX - point.x;
             let posY = mouseY - point.y;
-
-			context.arc(point.x + 50*scale + posX/30, point.y+ posY/20, radius*scale, 0, 2 * Math.PI, false);
+            
+			context.beginPath();
+			context.arc(point.x + 50*scale + posX/30, point.y+ posY/50, radius*scale, 0, 2 * Math.PI, false);
 			context.fillStyle = 'black';
 			context.closePath();
 
