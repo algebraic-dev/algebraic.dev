@@ -19,7 +19,9 @@
         cycle: number;
         speed: number;
         times: number;
-        winks: number
+        winks: number;
+        stare: number;
+        stareCount: number
     }
 
     let eyes = [] as Eye[];
@@ -35,6 +37,11 @@
     const advanceEye = (eye: Eye) => {
         eye.cycle += eye.times % 2 == 0 ? eye.speed : -eye.speed;
         eye.cycle = Math.max(0, Math.min(1, eye.cycle));
+
+        if (eye.cycle == 0 && eye.stareCount < eye.stare) {
+            eye.stareCount += eye.speed;
+            return
+        }
 
         if (eye.cycle == 0 || eye.cycle == 1) {
             eye.times++;
@@ -53,7 +60,7 @@
         let radius = Math.random() * 10 + 20;
         let speed = Math.random() * 0.1 + 0.05;
 
-        return { pos: { x, y }, scale, radius, cycle: 1.0, speed, times: 0, winks: Math.random() > 0.5 ? 2 : 4 };
+        return { pos: { x, y }, scale, radius, cycle: 1.0, speed, times: 0, winks: Math.random() > 0.5 ? 2 : 4, stare: Math.random()*10, stareCount: 0 };
     }
 
     const generateWhileNotCollides = () => {
@@ -148,9 +155,17 @@
 			context.strokeStyle = `rgba(255, 255, 255, 1.0)`;
 			context.lineWidth = 1;
 
+            // convert radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(227,227,227,1) 0%, rgba(255,255,255,1) 100%)
+
+            let gradient = context.createRadialGradient(point.x + 50*scale, point.y, 0, point.x + 50*scale, point.y, radius*scale);
+            gradient.addColorStop(0, 'rgba(2,0,36,1)');
+            gradient.addColorStop(0, 'rgba(227,227,227,1)');
+            gradient.addColorStop(1, 'rgba(255,255,255,1)');
+
+
 			context.beginPath();
 			drawLadder(point, scale, cycle);
-			context.fillStyle = `rgba(255, 255, 255, 1.0)`;
+			context.fillStyle = gradient;
 			context.fill();
 			context.closePath();
 
@@ -256,7 +271,7 @@
                 drawEye(eye.pos, eye.scale, eye.radius, eye.cycle);
             }
 
-            if (Math.random() < 0.01 && eyes.length < 15) {
+            if (Math.random() < 0.05 && eyes.length < 15) {
                 generateWhileNotCollides();
             }
 

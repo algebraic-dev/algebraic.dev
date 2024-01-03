@@ -16,7 +16,9 @@
 <main on:mousemove={handleMove}>
     <div class="container">
         <div class="title">
-            「 algebraic.sofia 」
+            「 algebraic
+            <span style="color: #58FF73">sofia</span>
+             」
         </div>
         <div class="desc">
             . . Hi, I’m Sofia a 21y _ software developer _ _
