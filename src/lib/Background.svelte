@@ -1,10 +1,73 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-    type Line = {
-        x: number,
-        y: number,
-        angle: number
+	type Line = {
+		x: number;
+		y: number;
+		angle: number;
+	};
+
+	type Point = {
+		x: number;
+		y: number;
+	};
+
+    type Eye = {
+        pos: Point;
+        scale: number;
+        radius: number;
+        cycle: number;
+        speed: number;
+        times: number;
+        winks: number
+    }
+
+    let eyes = [] as Eye[];
+    
+    const collides = (a: Eye, b: Eye) => {
+        let dx = a.pos.x - b.pos.x;
+        let dy = a.pos.y - b.pos.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance < a.scale*100 + b.scale*100;
+    }
+
+    const advanceEye = (eye: Eye) => {
+        eye.cycle += eye.times % 2 == 0 ? eye.speed : -eye.speed;
+        eye.cycle = Math.max(0, Math.min(1, eye.cycle));
+
+        if (eye.cycle == 0 || eye.cycle == 1) {
+            eye.times++;
+        }
+    }
+
+    const shouldDeleteEye = (eye: Eye) => {
+        return eye.times > eye.winks;
+    }
+
+    const generateRandomEye = () => {
+        let x = Math.random() * innerWidth;
+        let y = Math.random() * innerHeight;
+
+        let scale = Math.random() * 0.5 + 0.5;
+        let radius = Math.random() * 10 + 20;
+        let speed = Math.random() * 0.1 + 0.05;
+
+        return { pos: { x, y }, scale, radius, cycle: 1.0, speed, times: 0, winks: Math.random() > 0.5 ? 2 : 4 };
+    }
+
+    const generateWhileNotCollides = () => {
+        let eye = generateRandomEye();
+
+        while (eyes.some((e) => collides(e, eye))) {
+            eye = generateRandomEye();
+        }
+
+        eyes.push(eye);
+    }
+
+    const removeEyes = () => {
+        eyes = eyes.filter((e) => !shouldDeleteEye(e));
     }
 
 	let canvas: HTMLCanvasElement;
@@ -12,113 +75,209 @@
 
 	let innerWidth: number = 0;
 	let innerHeight: number = 0;
-    let interval: number = 57;
-    let displacementX: number = 1;
-    let displacementY: number = 1;
-    let mouseDisplacementX: number = 10;
-    let angleTilt = 0.1;
+	let interval: number = 57;
+	let displacementX: number = 1;
+	let displacementY: number = 1;
+	let mouseDisplacementX: number = 10;
+	let angleTilt = 1.0;
 
-    let angle = Math.PI/180 * 30;
-    
-    let setup: boolean = false;
-    let initialX = 0;
-    let initialY = 0;
+	let angle = (Math.PI / 180) * 30;
 
-    let mouseX = 0;
-    let mouseY = 0;
+	let setup: boolean = false;
+	let initialX: number = 0;
+	let initialY: number = 0;
 
-    let cameraX = 0;
-    let cameraY = 0;
+	let mouseX: number = 0;
+	let mouseY: number = 0;
 
-    let intersectY = (a: Line, x: number) => Math.tan(a.angle) * (x - a.x) + a.y;
-    let intersectX = (a: Line, y: number) => (y - a.y) / Math.tan(a.angle) + a.x;
+	let cameraX: number = 0;
+	let cameraY: number = 0;
 
-    const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+	let intersectY = (a: Line, x: number) => Math.tan(a.angle) * (x - a.x) + a.y;
+	let intersectX = (a: Line, y: number) => (y - a.y) / Math.tan(a.angle) + a.x;
 
-    const handleMove = (event: MouseEvent) => {
+	const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
-        if (!setup) {
-            initialX = event.clientX;
-            initialY = event.clientY;
-            setup = true;
-        }
+	const quadraticInterpolation = (x: number, y: number, t: number) =>
+		x + (y - x) * (0.5 - 0.5 * Math.cos(t * Math.PI));
 
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-    }
+	const handleMove = (event: MouseEvent) => {
+		if (!setup) {
+			initialX = event.clientX;
+			initialY = event.clientY;
+			setup = true;
+		}
 
-    const drawLine = (line: Line) => {
-        if (context) {
+		mouseX = event.clientX;
+		mouseY = event.clientY;
+	};
+
+	const drawLadder = (point: Point, scale: number, step: number) => {
+		if (context) {
+            let x = point.x;
+            let y = point.y;
+
+			let endX = x + scale * 100;
+			let diffX = scale * 30;
+
+			let eyeOpening = 35*scale;
+
+
+            context.save();
             
-            let intersectionTop = intersectY(line, 0);
-            let intersectionDown = intersectY(line, innerWidth);
+			context.moveTo(x, y);
 
-            let intersectLeft = intersectX(line, 0);
-            let intersectRight = intersectX(line, innerHeight);
+			context.bezierCurveTo(
+				x + diffX,
+				quadraticInterpolation(y - eyeOpening, y + eyeOpening, step),
+				endX - diffX,
+				quadraticInterpolation(y - eyeOpening, y + eyeOpening, step),
+				endX,
+				y
+			);
 
-            context.beginPath();
-                context.strokeStyle = `rgba(157, 157, 157, 0.2)`;
-                context.lineWidth = 1;
-                
-                if (intersectionTop < 0) {
-                    context.moveTo(intersectLeft, 0);
-                } else {
-                    context.moveTo(0, intersectionTop);
-                }
+			context.bezierCurveTo(endX - diffX, y + eyeOpening, x + diffX, y + eyeOpening, x, y);
 
-                if (intersectionDown > innerHeight) {
-                    context.lineTo(intersectRight, innerHeight);
-                } else {
-                    context.lineTo(innerWidth, intersectionDown);
-                }
-        
-                context.stroke();
 
-        }
-    }
+            context.restore()
+		}
+	};
+
+	const drawEye = (point: Point, scale: number, radius: number, cycle: number) => {
+		if (context) {
+			context.strokeStyle = `rgba(255, 255, 255, 1.0)`;
+			context.lineWidth = 1;
+
+			context.beginPath();
+			drawLadder(point, scale, cycle);
+			context.fillStyle = `rgba(255, 255, 255, 1.0)`;
+			context.fill();
+			context.closePath();
+
+			context.save();
+
+			context.clip();
+
+			context.beginPath();
+
+            let posX = mouseX - point.x;
+            let posY = mouseY - point.y;
+
+			context.arc(point.x + 50*scale + posX/30, point.y+ posY/20, radius*scale, 0, 2 * Math.PI, false);
+			context.fillStyle = 'black';
+			context.closePath();
+
+			context.fill();
+
+			context.restore();
+		}
+	};
+
+	const drawLine = (line: Line) => {
+		if (context) {
+			let intersectionTop = intersectY(line, 0);
+			let intersectionDown = intersectY(line, innerWidth);
+
+			let intersectLeft = intersectX(line, 0);
+			let intersectRight = intersectX(line, innerHeight);
+
+			context.beginPath();
+			context.strokeStyle = `rgba(157, 157, 157, 0.2)`;
+			context.lineWidth = 1;
+
+			if (intersectionTop < 0) {
+				context.moveTo(intersectLeft, 0);
+			} else {
+				context.moveTo(0, intersectionTop);
+			}
+
+			if (intersectionDown > innerHeight) {
+				context.lineTo(intersectRight, innerHeight);
+			} else {
+				context.lineTo(innerWidth, intersectionDown);
+			}
+
+			context.stroke();
+		}
+	};
 
 	onMount(() => {
 		context = canvas.getContext('2d');
 
-        const update = () => {
-            cameraX = lerp(cameraX, mouseX - initialX, 0.05);
-            cameraY = lerp(cameraY, mouseY - initialY, 0.05);
+		const update = () => {
+			cameraX = lerp(cameraX, mouseX - initialX, 0.05);
+			cameraY = lerp(cameraY, mouseY - initialY, 0.05);
 
-            angle = Math.sin(performance.now() / 1000) * Math.PI/180 * angleTilt + 30;
+			let smallAngleTilt = cameraX / innerWidth / 10;
 
-            interval = Math.sin(performance.now() / 1000) * 0.1 + 70;
+			angle =
+				((Math.sin(performance.now() / 1000) * Math.PI) / 180) * angleTilt + 30 + smallAngleTilt;
+
+			interval = Math.sin(performance.now() / 1000) * 0.1 + 70;
+
+			context?.clearRect(0, 0, innerWidth, innerHeight);
+
+			let widthIntervals = innerWidth / interval;
+			let heightInterval = innerHeight / interval;
+
+			for (let i = -heightInterval; i < heightInterval; i++) {
+				let x =
+					i * interval * Math.cos(angle) +
+					innerWidth / 2 +
+					cameraX / mouseDisplacementX +
+					displacementX;
+				let y =
+					i * interval * Math.sin(angle) +
+					innerHeight / 2 +
+					cameraY / mouseDisplacementX +
+					displacementY;
+				drawLine({ x, y, angle: angle + Math.PI / 2 });
+			}
+
+			for (let i = -widthIntervals; i < widthIntervals * 2; i++) {
+				let nAngle = angle + Math.PI / 2;
+				let x =
+					i * interval * Math.cos(nAngle) +
+					innerWidth / 2 +
+					cameraX / mouseDisplacementX +
+					displacementX;
+				let y =
+					i * interval * Math.sin(nAngle) +
+					innerHeight / 2 +
+					cameraY / mouseDisplacementX +
+					displacementY;
+				drawLine({ x, y, angle: nAngle + Math.PI / 2 });
+			}
 
 
-            context?.clearRect(0, 0, innerWidth, innerHeight);
-
-            let widthIntervals = innerWidth / interval;
-            let heightInterval = innerHeight / interval;
-
-            for (let i = -widthIntervals; i < widthIntervals*2; i++) {
-                let x = (i * interval)*Math.cos(angle) + innerWidth/2 + cameraX/mouseDisplacementX + displacementX;
-                let y = (i * interval)*Math.sin(angle) + innerHeight/2 + cameraY/mouseDisplacementX + displacementY;
-                drawLine({x, y, angle: angle + Math.PI/2 })
+            for (let i = 0; i < eyes.length; i++) {
+                let eye = eyes[i];
+                advanceEye(eye);
+                drawEye(eye.pos, eye.scale, eye.radius, eye.cycle);
             }
-            
-            for (let i = -heightInterval; i < heightInterval*2; i++) {
-                let nAngle = angle + Math.PI/2;
-                let x = (i * interval)*Math.cos(nAngle) + innerWidth/2 + cameraX/mouseDisplacementX + displacementX;
-                let y = (i * interval)*Math.sin(nAngle) + innerHeight/2 + cameraY/mouseDisplacementX + displacementY;
-                drawLine({x, y, angle: nAngle + Math.PI/2 })
-            }
-            
-            requestAnimationFrame(update);
-        }
 
-        requestAnimationFrame(update);
+            if (Math.random() < 0.01 && eyes.length < 15) {
+                generateWhileNotCollides();
+            }
+
+            removeEyes();
+
+			requestAnimationFrame(update);
+		};
+
+		requestAnimationFrame(update);
 	});
-
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window bind:innerWidth bind:innerHeight on:mousemove={handleMove} />
 
-<canvas bind:this={canvas} width={innerWidth} height={innerHeight} on:mousemove={handleMove}></canvas>
+<canvas bind:this={canvas} width={innerWidth} height={innerHeight}></canvas>
 
 <style>
-	/* styles go here */
+	canvas {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: -1;
+	}
 </style>
