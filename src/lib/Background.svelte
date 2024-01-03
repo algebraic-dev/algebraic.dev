@@ -1,10 +1,20 @@
 <script lang="ts">
-    export let foo : string;
+	import { onMount } from 'svelte';
+
+	let canvas: HTMLCanvasElement;
+	let context: CanvasRenderingContext2D | null;
+
+	let innerWidth: number = 0;
+	let innerHeight: number = 0;
+
+	onMount(() => {
+		context = canvas.getContext('2d');
+	});
 </script>
 
-<div>
-    Hello { foo }
-</div>
+<svelte:window bind:innerWidth bind:innerHeight />
+
+<canvas bind:this={canvas} width={innerWidth} height={innerHeight}></canvas>
 
 <style>
 	/* styles go here */
