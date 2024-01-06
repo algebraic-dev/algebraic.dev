@@ -162,7 +162,6 @@
             gradient.addColorStop(0.2, 'white');
             gradient.addColorStop(0, 'rgba(255,255,255,1)');
 
-
             context.save();
             context.rotate(Math.PI/180 * (scale*50 - 25));
             context.translate(cameraX/10, cameraY/10);
@@ -174,9 +173,7 @@
             context.stroke();
 			context.closePath();
 
-
 			context.clip();
-
             
             let posX = mouseX - point.x;
             let posY = mouseY - point.y;
@@ -184,6 +181,13 @@
 			context.beginPath();
 			context.arc(point.x + 50*scale + posX/30, point.y+ posY/50, radius*scale, 0, 2 * Math.PI, false);
 			context.fillStyle = 'black';
+			context.closePath();
+
+			context.fill();
+
+            context.beginPath();
+			context.arc(point.x + 10 + 50*scale + posX/30, point.y - 10 + posY/50, radius/5*scale, 0, 2 * Math.PI, false);
+			context.fillStyle = 'white';
 			context.closePath();
 
 			context.fill();

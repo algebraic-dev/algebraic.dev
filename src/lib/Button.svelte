@@ -24,5 +24,6 @@
 		font-size: 17px;
 		min-width: 180px;
         transition: background 0.5s ease-in-out;
+		cursor: pointer;
 	}
 </style>
