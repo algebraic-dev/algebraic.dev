@@ -82,7 +82,7 @@
         background: #fff;
         font-family: Poppins;
     }
-    
+
 	.container {
 		display: flex;
 		justify-content: center;
@@ -100,6 +100,12 @@
         margin-top: 10%;
         width: 50%;
         margin-bottom: 10%;
+    }
+
+    @media screen and (max-width: 992px) {
+        article {
+            width: 80%;
+        }
     }
 
     .title {
