@@ -1,10 +1,18 @@
 <svelte:head>
     <title>BH Systems Meetup</title>
-    <meta property="og:title" content="H Systems Meetup" />
+
+    <meta property="og:title" content="BH Systems Meetup" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.algebraic.dev/bh-systems" />
     <meta property="og:image" content="https://www.algebraic.dev/description.png" />
     <meta property="og:description" content="Evento mensal de tech talks sobre system programming :D" />
+
+    <meta name="twitter:site" content="BH Systems Meetup">
+    <meta name="twitter:title" content="BH Systems Meetup">
+    <meta name="twitter:description" content="Evento mensal de tech talks sobre system programming :D">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:src" content="https://www.algebraic.dev/description.png">
+
     <meta name="theme-color" content="#FFFFFF">
 </svelte:head>
 
