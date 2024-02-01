@@ -12,70 +12,17 @@
 		y: number;
 	};
 
-    type Eye = {
-        pos: Point;
-        scale: number;
-        radius: number;
-        cycle: number;
-        speed: number;
-        times: number;
-        winks: number;
-        stare: number;
-        stareCount: number
-    }
-
-    let eyes = [] as Eye[];
-    
-    const collides = (a: Eye, b: Eye) => {
-        let dx = a.pos.x - b.pos.x;
-        let dy = a.pos.y - b.pos.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-
-        return distance < a.scale*100 + b.scale*100;
-    }
-
-    const advanceEye = (eye: Eye) => {
-        eye.cycle += eye.times % 2 == 0 ? eye.speed : -eye.speed;
-        eye.cycle = Math.max(0, Math.min(1, eye.cycle));
-
-        if (eye.cycle == 0 && eye.stareCount < eye.stare) {
-            eye.stareCount += eye.speed;
-            return
-        }
-
-        if (eye.cycle == 0 || eye.cycle == 1) {
-            eye.times++;
-        }
-    }
-
-    const shouldDeleteEye = (eye: Eye) => {
-        return eye.times > eye.winks;
-    }
-
-    const generateRandomEye = () => {
-        let x = Math.random() * innerWidth;
-        let y = Math.random() * innerHeight;
-
-        let scale = Math.random() * 0.7 + 0.3;
-        let radius = Math.random() * 10 + 20;
-        let speed = Math.random() * 0.1 + 0.05;
-
-        return { pos: { x, y }, scale, radius, cycle: 1.0, speed, times: 0, winks: Math.random() > 0.5 ? 2 : 4, stare: Math.random()*10, stareCount: 0 };
-    }
-
-    const generateWhileNotCollides = () => {
-        let eye = generateRandomEye();
-
-        while (eyes.some((e) => collides(e, eye))) {
-            eye = generateRandomEye();
-        }
-
-        eyes.push(eye);
-    }
-
-    const removeEyes = () => {
-        eyes = eyes.filter((e) => !shouldDeleteEye(e));
-    }
+	type Eye = {
+		pos: Point;
+		scale: number;
+		radius: number;
+		cycle: number;
+		speed: number;
+		times: number;
+		winks: number;
+		stare: number;
+		stareCount: number;
+	};
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null;
@@ -85,7 +32,7 @@
 	let interval: number = 57;
 	let displacementX: number = 1;
 	let displacementY: number = 1;
-	let mouseDisplacementX: number = 10;
+	let mouseDisplacementX: number = 20;
 	let angleTilt = 1.0;
 
 	let angle = (Math.PI / 180) * 30;
@@ -99,6 +46,69 @@
 
 	let cameraX: number = 0;
 	let cameraY: number = 0;
+
+	let eyes = [] as Eye[];
+
+	const collides = (a: Eye, b: Eye) => {
+		let dx = a.pos.x - b.pos.x;
+		let dy = a.pos.y - b.pos.y;
+		let distance = Math.sqrt(dx * dx + dy * dy);
+
+		return distance < a.scale * 100 + b.scale * 100;
+	};
+
+	const advanceEye = (eye: Eye) => {
+		eye.cycle += eye.times % 2 == 0 ? eye.speed : -eye.speed;
+		eye.cycle = Math.max(0, Math.min(1, eye.cycle));
+
+		if (eye.cycle == 0 && eye.stareCount < eye.stare) {
+			eye.stareCount += eye.speed;
+			return;
+		}
+
+		if (eye.cycle == 0 || eye.cycle == 1) {
+			eye.times++;
+		}
+	};
+
+	const shouldDeleteEye = (eye: Eye) => {
+		return eye.times > eye.winks;
+	};
+
+	const generateRandomEye = () => {
+		let x = Math.random() * innerWidth;
+		let y = Math.random() * innerHeight;
+
+		let scale = Math.random() * 0.7 + 0.3;
+		let radius = Math.random() * 10 + 20;
+		let speed = Math.random() * 0.1 + 0.05;
+
+		return {
+			pos: { x, y },
+			scale,
+			radius,
+			cycle: 1.0,
+			speed,
+			times: 0,
+			winks: Math.random() > 0.5 ? 2 : 4,
+			stare: Math.random() * 10,
+			stareCount: 0
+		};
+	};
+
+	const generateWhileNotCollides = () => {
+		let eye = generateRandomEye();
+
+		while (eyes.some((e) => collides(e, eye))) {
+			eye = generateRandomEye();
+		}
+
+		eyes.push(eye);
+	};
+
+	const removeEyes = () => {
+		eyes = eyes.filter((e) => !shouldDeleteEye(e));
+	};
 
 	let intersectY = (a: Line, x: number) => Math.tan(a.angle) * (x - a.x) + a.y;
 	let intersectX = (a: Line, y: number) => (y - a.y) / Math.tan(a.angle) + a.x;
@@ -121,17 +131,16 @@
 
 	const drawLadder = (point: Point, scale: number, step: number) => {
 		if (context) {
-            let x = point.x;
-            let y = point.y;
+			let x = point.x;
+			let y = point.y;
 
 			let endX = x + scale * 100;
 			let diffX = scale * 30;
 
-			let eyeOpening = 35*scale;
+			let eyeOpening = 35 * scale;
 
+			context.save();
 
-            context.save();
-            
 			context.moveTo(x, y);
 
 			context.bezierCurveTo(
@@ -145,8 +154,7 @@
 
 			context.bezierCurveTo(endX - diffX, y + eyeOpening, x + diffX, y + eyeOpening, x, y);
 
-
-            context.restore()
+			context.restore();
 		}
 	};
 
@@ -155,34 +163,47 @@
 			context.strokeStyle = `rgba(0, 0, 0, 1.0)`;
 			context.lineWidth = 3;
 
-            // convert radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(227,227,227,1) 0%, rgba(255,255,255,1) 100%)
+			let gradient = context.createRadialGradient(
+				point.x + 50 * scale,
+				point.y,
+				0,
+				point.x + 50 * scale,
+				point.y,
+				radius * 2 * scale
+			);
 
-            let gradient = context.createRadialGradient(point.x + 50*scale, point.y, 0, point.x + 50*scale, point.y, radius*2*scale);
-            gradient.addColorStop(0.9, 'gray');
-            gradient.addColorStop(0.2, 'white');
-            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+			gradient.addColorStop(0.9, 'gray');
+			gradient.addColorStop(0.2, 'white');
+			gradient.addColorStop(0, 'rgba(255,255,255,1)');
 
-            context.save();
-            context.rotate(Math.PI/180 * (scale*50 - 25));
-            context.translate(cameraX/10, cameraY/10);
+			context.save();
+			context.rotate((Math.PI / 180) * (scale * 50 - 25));
+			context.translate(cameraX / 10, cameraY / 10);
 
 			context.beginPath();
 			drawLadder(point, scale, cycle);
 			context.fillStyle = gradient;
 			context.fill();
-            context.stroke();
+			context.stroke();
 			context.closePath();
 
 			context.clip();
-            
-            let posX = mouseX - point.x;
-            let posY = mouseY - point.y;
-            
+
+			let posX = mouseX - point.x;
+			let posY = mouseY - point.y;
+
 			context.beginPath();
-			context.arc(point.x + 50*scale + posX/30, point.y+ posY/50, radius*scale, 0, 2 * Math.PI, false);
+			context.arc(
+				point.x + 50 * scale + posX / 30,
+				point.y + posY / 50,
+				radius * scale,
+				0,
+				2 * Math.PI,
+				false
+			);
 			context.fillStyle = 'black';
 			context.closePath();
-			
+
 			context.fill();
 
 			context.restore();
@@ -265,18 +286,17 @@
 				drawLine({ x, y, angle: nAngle + Math.PI / 2 });
 			}
 
+			for (let i = 0; i < eyes.length; i++) {
+				let eye = eyes[i];
+				advanceEye(eye);
+				drawEye(eye.pos, eye.scale, eye.radius, eye.cycle);
+			}
 
-            for (let i = 0; i < eyes.length; i++) {
-                let eye = eyes[i];
-                advanceEye(eye);
-                drawEye(eye.pos, eye.scale, eye.radius, eye.cycle);
-            }
+			if (Math.random() < 0.05 && eyes.length < 15) {
+				generateWhileNotCollides();
+			}
 
-            if (Math.random() < 0.05 && eyes.length < 15) {
-                generateWhileNotCollides();
-            }
-
-            removeEyes();
+			removeEyes();
 
 			requestAnimationFrame(update);
 		};

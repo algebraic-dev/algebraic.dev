@@ -1,7 +1,6 @@
 <script>
 	import Background from "$lib/Background.svelte";
 	import Box from "$lib/Box.svelte";
-	import "$lib/global.css";
 </script>
 
 <Background/>

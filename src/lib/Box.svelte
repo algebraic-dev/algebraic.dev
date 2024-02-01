@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Button from "./Button.svelte";
 
-    const handleMove = (ev: MouseEvent) => { 
+    const handleMove = (ev: MouseEvent) => {
         let target = ev.currentTarget as HTMLElement;
         let rect = target.getBoundingClientRect();
-        
+
         let x = ev.clientX - rect.left;
         let y = ev.clientY - rect.top;
 
@@ -21,7 +21,7 @@
              」
         </div>
         <div class="desc">
-            . . Hi, I’m Sofia a 21y _ software developer _ _
+            . . Hi, I’m Sofia a 21yo _ software developer _ _
         </div>
         <div class="buttons">
             <Button filled>ENTER</Button>
