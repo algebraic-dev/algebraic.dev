@@ -1,6 +1,19 @@
+<svelte:head>
+    <title>BH Systems Meetup</title>
+    <meta property="og:title" content="H Systems Meetup" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.algebraic.dev/bh-systems" />
+    <meta property="og:image" content="https://www.algebraic.dev/description.png" />
+    <meta property="og:description" content="Evento mensal de tech talks sobre system programming :D" />
+    <meta name="theme-color" content="#FFFFFF">
+</svelte:head>
+
 <main class="container">
     <article>
-        <h1>BH Systems</h1>
+        <div class="title">
+            <h1 class="first">BH</h1>
+            <h1 class="sec"> Systems</h1>
+        </div>
         <h2>O que é?</h2>
         <p>
             Nosso objetivo é mergulhar em temas técnicos de maneira profunda
@@ -79,5 +92,18 @@
         margin-top: 10%;
         width: 50%;
         margin-bottom: 10%;
+    }
+
+    .title {
+        display: flex;
+    }
+
+    .first {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    .sec {
+        font-weight: 600;
     }
 </style>
