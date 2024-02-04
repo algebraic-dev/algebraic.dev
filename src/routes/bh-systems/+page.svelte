@@ -27,6 +27,9 @@
 		<div class="title">
 			<h1 class="first">BH</h1>
 			<h1 class="sec">Systems</h1>
+			<a class="telegram" href="https://t.me/+9CkDkq-uVXk3YmJh">
+				Telegram
+			</a>
 		</div>
 		<h2>O que é?</h2>
 		<p>
@@ -124,6 +127,15 @@
 		margin-bottom: 10%;
 	}
 
+	.telegram {
+		background-color: #0088cc;
+		color: white;
+		margin-left: 10px;
+		padding: 5px 10px;
+		border-radius: 5px;
+		text-decoration: none;
+	}
+
 	@media screen and (max-width: 992px) {
 		article {
 			width: 80%;
@@ -132,6 +144,8 @@
 
 	.title {
 		display: flex;
+		align-items: center;
+  		justify-content: center;
 	}
 
 	.first {
