@@ -1,17 +1,18 @@
 <svelte:head>
-	<title>BH Systems Meetup</title>
+	<title>IOHC Meetup</title>
 
-	<meta property="og:title" content="BH Systems Meetup" />
+	<meta property="og:title" content="IOHC Meetup" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://www.algebraic.dev/bh-systems" />
+	<meta property="og:url" content="https://www.algebraic.dev/iohc" />
 	<meta property="og:image" content="https://www.algebraic.dev/description.png" />
+
 	<meta
 		property="og:description"
 		content="Evento mensal de tech talks sobre system programming :D"
 	/>
 
-	<meta name="twitter:site" content="BH Systems Meetup" />
-	<meta name="twitter:title" content="BH Systems Meetup" />
+	<meta name="twitter:site" content="IOHC Meetup" />
+	<meta name="twitter:title" content="IOHC Meetup" />
 	<meta
 		name="twitter:description"
 		content="Evento mensal de tech talks sobre system programming :D"
@@ -25,8 +26,8 @@
 <main class="container">
 	<article>
 		<div class="title">
-			<h1 class="first">BH</h1>
-			<h1 class="sec">Systems</h1>
+			<h1 class="first">IO</h1>
+			<h1 class="sec">HC</h1>
 			<a class="telegram" href="https://t.me/+9CkDkq-uVXk3YmJh">
 				Telegram
 			</a>
@@ -50,9 +51,8 @@
 			compartilhamento de experiências de aprendizado.
 		</p>
 		<p>
-			Para submeter uma proposta de talk acesse esse <a href="https://forms.gle/XZAbYyx5yeHZMeUW8"
-				>formulário</a
-			>
+			Para submeter uma proposta de talk acesse esse
+			<a href="https://forms.gle/XZAbYyx5yeHZMeUW8">formulário</a>
 		</p>
 		<p>
 			Você precisa apenas de um conhecimento básico em programação para acompanhar nossas palestras.
@@ -62,22 +62,10 @@
 			experientes.
 		</p>
 		<h2>Local</h2>
-		<p>Ainda estamos procurando um local!</p>
-		<h2>Talks</h2>
-		<table>
-			<thead>
-				<tr>
-					<th scope="col">Nome</th>
-					<th scope="col">Tópico</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<th scope="row">Sofia</th>
-					<td>Perceus GC: Superando a performance de linguagens imperativas com linguagens puramente funcionais</td>
-				</tr>
-			</tbody>
-		</table>
+		<p>
+			O evento será presencial e provavelmente nessas primeiras vezes em Belo Horizonte. Ainda estamos
+			procurando um local!
+		</p>
 		<h2>Contato</h2>
 		<p>
 			Se desejar discutir qualquer tópico relacionado a talks, compartilhar ideias ou simplesmente
@@ -95,7 +83,7 @@
 			<li>
 				Evento
 				<ul>
-					<li>Email: bh.systems@algebraic.dev</li>
+					<li>Email: iohc@algebraic.dev</li>
 				</ul>
 			</li>
 		</ul>
@@ -145,11 +133,10 @@
 	.title {
 		display: flex;
 		align-items: center;
-  		justify-content: center;
 	}
 
 	.first {
-		margin-right: 10px;
+		margin-right: 2px;
 		font-weight: bold;
 	}
 
