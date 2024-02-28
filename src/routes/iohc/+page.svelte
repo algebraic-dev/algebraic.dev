@@ -28,9 +28,6 @@
 		<div class="title">
 			<h1 class="first">IO</h1>
 			<h1 class="sec">HC</h1>
-			<a class="telegram" href="https://t.me/+9CkDkq-uVXk3YmJh">
-				Telegram
-			</a>
 		</div>
 		<h2>O que é?</h2>
 		<p>
@@ -72,21 +69,12 @@
 			fazer amizade com os organizadores do evento, sinta-se à vontade para entrar em contato pelos
 			meios listados abaixo:
 		</p>
-		<ul>
-			<li>
-				Sofia Rodrigues
-				<ul>
-					<li>Discord: algebraic.sofia</li>
-					<li>Email: sofia@algebraic.dev</li>
-				</ul>
-			</li>
-			<li>
-				Evento
-				<ul>
-					<li>Email: iohc@algebraic.dev</li>
-				</ul>
-			</li>
-		</ul>
+		<a class="telegram" href="https://t.me/+9CkDkq-uVXk3YmJh">
+			Telegram
+		</a>
+		<a class="whatsapp" href="https://chat.whatsapp.com/Hl6LM68lozI7tPkFp1VOtd">
+			Whatsapp
+		</a>
 	</article>
 </main>
 
@@ -117,6 +105,14 @@
 
 	.telegram {
 		background-color: #0088cc;
+		color: white;
+		padding: 5px 10px;
+		border-radius: 5px;
+		text-decoration: none;
+	}
+
+	.whatsapp {
+		background-color: #4be343;
 		color: white;
 		margin-left: 10px;
 		padding: 5px 10px;
