@@ -4,7 +4,7 @@
 	<meta property="og:title" content="IOHC Meetup" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://www.algebraic.dev/iohc" />
-	<meta property="og:image" content="https://www.algebraic.dev/description.png" />
+	<meta property="og:image" content="https://www.algebraic.dev/iohc.png" />
 
 	<meta
 		property="og:description"
@@ -18,7 +18,7 @@
 		content="Evento mensal de tech talks sobre system programming :D"
 	/>
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image:src" content="https://www.algebraic.dev/description.png" />
+	<meta name="twitter:image:src" content="https://www.algebraic.dev/iohc.png" />
 
 	<meta name="theme-color" content="#FFFFFF" />
 </svelte:head>
