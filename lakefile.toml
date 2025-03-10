@@ -1,0 +1,21 @@
+name = "algebraic"
+version = "0.1.0"
+defaultTargets = ["algebraic"]
+
+[[lean_lib]]
+name = "Algebraic"
+
+[[lean_exe]]
+name = "algebraic"
+root = "Main"
+
+[[require]]
+name = "batteries"
+scope = "leanprover-community"
+rev = "main"
+
+[[require]]
+name = "verso"
+scope = "leanprover"
+rev = "main"
+
