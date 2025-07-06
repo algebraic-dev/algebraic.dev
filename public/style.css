@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Oranienbaum&display=swap');
+
+:root {
+    --frame-spacing: 20px;
+    --frame-opening: 15px;
+}
+
+body {
+    font-family: "Oranienbaum", serif;
+    background: #EEE9DB;
+    margin: 0px;
+}
+
+.frame-box {
+    box-sizing: border-box;
+    padding: 25px;
+    outline: 1px solid black;
+    position: relative;
+    z-index: 1;
+    margin: calc(var(--frame-opening) / 2) 0;
+    border: none;
+}
+
+.frame-box::after {
+    width: calc(100% - var(--frame-opening));
+    height: calc(100% + var(--frame-opening));
+    content: "";
+    position: absolute;
+    top: calc(var(--frame-opening) / -2);
+    left: calc(var(--frame-opening) / 2);
+    outline: 1px solid black;
+    pointer-events: none;
+}
+
+.container {
+    width: calc(100vw - 2 * var(--frame-spacing));
+    height: calc(100vh - 2 * var(--frame-spacing) - var(--frame-opening));
+    top: var(--frame-spacing);
+    left: var(--frame-spacing);
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+}
+
+.character {
+    position: relative;
+    height: 90%;
+    width: 100%;
+}
+
+h1 {
+    font-size: 80px;
+    text-transform: uppercase;
+    line-height: 79%;
+    font-weight: 400;
+    width: 100%;
+    margin: 0px;
+    word-spacing: 100vw;
+}
+
+p {
+    line-height: 120%;
+    font-size: 20px;
+}
+
+.painted {
+    background-color: #D4BD89;
+    padding: 20px 40px;
+}
+
+.overlay {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    left: 1px;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center {
+    position: absolute;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    align-self: center;
+}
+
+.bottom {
+    height: 75%;
+    top: calc(var(--frame-opening) / 2 + 25px);
+    align-self: self-end;
+    position: relative;
+    left: 3%;
+    display: flex;
+    align-items: end;
+}
+
+.top {
+    bottom: calc(var(--frame-opening) / 2 + 25px);
+    align-self: self-start;
+    position: relative;
+    height: 90%;
+    right: 5%;
+}
